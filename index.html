@@ -1,7 +1,235 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
 <!DOCTYPE html>
 <html>
-  <body>
-    <h1>Hello World</h1>
-    <p>I'm hosted with GitHub Pages.</p>
-  </body>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="kinetic-v4.7.4.min.js" type="text/javascript"></script>
+    </head>
+    <style>
+        body{
+            background-image: url('img/fondo.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+}
+    </style>
+    <body>
+        <div id="container"></div>  
+        <script defer="defer">
+            var santa=0;
+            var layerHO1,layerHO2,layerHO3;
+            var stage = new Kinetic.Stage({
+                container: 'container',
+                width: 1350,
+                height: 646
+            });
+
+            var layer = new Kinetic.Layer();
+            var star = new Kinetic.Star({
+                x: 90,                
+                y: 90,
+                numPoints: 6,
+                innerRadius: 20,
+                outerRadius: 45,
+                fill: 'yellow',
+                stroke: 'black',
+                strokeWidth: 4,
+                draggable:true
+            });
+            // add cursor styling
+            star.on('mouseover', function() {
+                document.body.style.cursor = 'pointer';
+            });
+            star.on('mouseout', function() {
+                document.body.style.cursor = 'default';
+            });
+
+
+            // add the shape to the layer
+            layer.add(star); // add the layer to the stage
+            stage.add(layer);
+            
+            var layer2 = new Kinetic.Layer();
+
+            var imageObj = new Image();
+            imageObj.onload = function() {
+                santa = new Kinetic.Image({
+                    x: -350,
+                    y: 500,
+                    image: imageObj,
+                    width: 306,
+                    height: 118
+                });
+
+                // add the shape to the layer
+                layer2.add(santa);
+
+                // add the layer to the stage
+                stage.add(layer2);
+                
+                layerHO1 = new Kinetic.Layer();
+                var simpleText = new Kinetic.Text({
+                    x: santa.attrs.x+30,
+                    y: santa.attrs.y-30,
+                    text: 'HO',
+                    fontSize: 30,
+                    fontFamily: 'Calibri',
+                    fill: 'green'
+                });
+                layerHO1.add(simpleText);
+                stage.add(layerHO1);
+                layerHO1.hide();
+            
+              
+                var simpleText2 = new Kinetic.Text({
+                    x: santa.attrs.x-50,
+                    y: santa.attrs.y+100,
+                    text: 'HO',
+                    fontSize: 30,
+                    fontFamily: 'Calibri',
+                    fill: 'green'
+                });
+                layerHO1.add(simpleText2);
+                layerHO1.hide();
+            
+                var simpleText3 = new Kinetic.Text({
+                    x: santa.attrs.x-65,
+                    y: santa.attrs.y+30,
+                    text: 'HO',
+                    fontSize: 30,
+                    fontFamily: 'Calibri',
+                    fill: 'green'
+                });
+                layerHO1.add(simpleText3);
+                layerHO1.hide();
+                
+                
+                var anim = new Kinetic.Animation(function(frame) {
+                    if(santa.attrs.x >= 1500){
+                        anim.stop();
+                    }
+                    santa.setX(santa.attrs.x + 3);
+                    santa.setY(santa.attrs.y - 1);                   
+                    
+                }, layer2);
+                var animHO1 = new Kinetic.Animation(function(frame) {
+                    if(santa.attrs.x >= 1500){
+                        animHO1.stop();
+                        escribeFelicidad();                        
+                        setInterval(esNavidadYNieva,3000);
+                    }
+                    
+                    simpleText.setX(santa.attrs.x+30 + 3);
+                    simpleText.setY(santa.attrs.y-30 - 1);
+                    simpleText2.setX( santa.attrs.x-50 + 3);
+                    simpleText2.setY(santa.attrs.y+100 - 1);   
+                    simpleText3.setX( santa.attrs.x-65 + 3);
+                    simpleText3.setY(santa.attrs.y+30 - 1);
+                    
+                }, layerHO1);
+                
+               
+                 
+                anim.start();
+                animHO1.start();
+                
+                
+            };
+            imageObj.src = 'img/santa.png';
+            //  console.log('dasd  '+layer2.children[0].attrs.x);
+          
+            layer2.on('mouseover', function() {
+                layerHO1.show();
+               
+                
+            });
+            
+            layer2.on('mouseout', function() {
+                layerHO1.hide();
+               
+            });
+            /*
+            santa.createImageHitRegion(function() {
+                layer2.draw();
+            });
+             */  
+           
+            var num = -0.1;
+            setInterval(parpadea,100);
+            function parpadea(){
+                var transparente =star.getOpacity();
+                // console.log(transparente);
+                star.setOpacity(transparente+num);
+                layer.draw();
+                if(star.getOpacity()>=1){
+                    num=-0.1;
+                }
+                if(star.getOpacity()<=0.2){
+                    num=0.1;
+                }
+            }
+           
+            function escribeFelicidad(){
+               
+                var complexText = new Kinetic.Text({
+                    x: 430,
+                    y: 100,
+                    text: 'FELIZ NAVIDAD A TODOS\n LOS ALUMMNOS DEL CEP',
+                    fontSize: 35,
+                    fontFamily: 'Calibri',
+                    fill: 'white',
+                    stroke:'white',
+                    width: 500,
+                    padding: 20,
+                    align: 'center',
+                    fontWeight:'bold',
+                    strokeWidth: 1
+                });
+                layer.add(complexText);
+               
+            
+            }
+            
+            
+
+            function esNavidadYNieva(){
+                var layerNieve = new Kinetic.Layer();
+                var randomsX=Math.floor((Math.random()*1330)+1);
+                var imageObjNieve = new Image();
+                imageObjNieve.onload = function() {
+                    var bolaNieve = new Kinetic.Image({
+                        x: randomsX,
+                        y: -30,
+                        image: imageObjNieve,
+                        width: 50,
+                        height: 50,
+                        offset: [25, 25]
+                    });
+                    
+                   
+                    var angularSpeed = Math.PI / 2;
+                    var animNieve = new Kinetic.Animation(function(frame) {
+                        var angleDiff = frame.timeDiff * angularSpeed / 1000;
+                        bolaNieve.rotate(angleDiff);
+                        bolaNieve.setY(bolaNieve.attrs.y + 5);
+                        bolaNieve.setX(bolaNieve.attrs.x - 1);
+                    
+                        if(bolaNieve.attrs.y >= 650){
+                            animNieve.stop();
+                          setTimeout(function(){layerNieve.remove(this.bolaNeve)},10000); 
+                        }
+                    }, layerNieve);
+
+                    animNieve.start();
+                    layerNieve.add(bolaNieve);
+                    stage.add(layerNieve);
+                };
+                imageObjNieve.src = 'img/copo1.png';
+
+            }
+        </script>
+    </body>
 </html>
